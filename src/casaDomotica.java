@@ -49,7 +49,7 @@ public class casaDomotica {
                     break;
 
                 case 4:
-                    // doorsOpen = doorControl(); - Per implementar
+                    doorsOpen = doorControl(doorsOpen);
                     break;
 
                 case 5:
@@ -299,6 +299,7 @@ public class casaDomotica {
                     System.out.println("Color set to: " + lightColor);
                 } catch (Exception e) {
                     System.out.println("Error reading color.");
+                    sc.nextLine(); // Neteja el buffer en cas d'error
                 }
                 break;
 
@@ -353,6 +354,7 @@ public class casaDomotica {
                     System.out.println("All rooms color set to: " + lightColor);
                 } catch (Exception e) {
                     System.out.println("Error reading color.");
+                    sc.nextLine(); // Neteja el buffer en cas d'error
                 }
                 break;
 
@@ -402,15 +404,27 @@ public class casaDomotica {
 
             switch (choice) {
                 case 1:
-                    laundryRunning = startLaundryProgram();
+                    try {
+                        laundryRunning = startLaundryProgram();
+                    } catch (Exception e) {
+                        System.out.println("Error starting laundry program.");
+                    }
                     break;
 
                 case 2:
-                    checkLaundryStatus(laundryRunning);
+                    try {
+                        checkLaundryStatus(laundryRunning);
+                    } catch (Exception e) {
+                        System.out.println("Error checking laundry status.");
+                    }
                     break;
 
                 case 3:
-                    laundryRunning = cancelLaundryProgram();
+                    try {
+                        laundryRunning = cancelLaundryProgram();
+                    } catch (Exception e) {
+                        System.out.println("Error cancelling laundry program.");
+                    }
                     break;
 
                 case 4:
@@ -478,7 +492,7 @@ public class casaDomotica {
     }
 
     // Control de les portes
-    public boolean doorControl() {
+    public boolean doorControl(boolean currentOpen) {
         boolean doorOpen = currentOpen;
         boolean exitDoors = false;
 
@@ -491,6 +505,7 @@ public class casaDomotica {
                 System.out.println("Door: CLOSED");
             }
 
+            System.out.println("Locked: " + (doorLocked ? "YES" : "NO"));
             System.out.println("1. Control specific door");
             System.out.println("2. Control all doors");
             System.out.println("3. Check doors");
@@ -503,19 +518,35 @@ public class casaDomotica {
             switch (choice) {
 
                 case 1:
-                    doorOpen = controlSpecificDoors(doorOpen);
+                    try {
+                        doorOpen = controlSpecificDoors(doorOpen);
+                    } catch (Exception e) {
+                        System.out.println("Error controlling specific door.");
+                    }
                     break;
 
                 case 2:
-                    doorOpen = controlAllDoors(doorOpen);
+                    try {
+                        doorOpen = controlAllDoors(doorOpen);
+                    } catch (Exception e) {
+                        System.out.println("Error controlling all doors.");
+                    }
                     break;
 
                 case 3:
-                    checkDoors(doorOpen);
+                    try {
+                        checkDoors(doorOpen);
+                    } catch (Exception e) {
+                        System.out.println("Error checking doors.");
+                    }
                     break;
 
                 case 4:
-                    doorOpen = panicMode();
+                    try {
+                        doorOpen = panicMode();
+                    } catch (Exception e) {
+                        System.out.println("Error activating panic mode.");
+                    }
                     break;
 
                 case 5:
@@ -608,7 +639,7 @@ public class casaDomotica {
     }
 
     public void checkDoors(boolean doorOpen) {
-        System.out.println("\n--- Door Status Check");
+        System.out.println("\n--- Door Status Check ---");
 
         // Mirar si les portes están obertes
         if (doorOpen) {
@@ -623,7 +654,6 @@ public class casaDomotica {
         } else {
             System.out.println("Locked: NO");
         }
-
 
         if (doorOpen && !doorLocked) {
             System.out.println("Status: DOOR IS VULNERABLE - Open and unlocked!");
@@ -642,9 +672,9 @@ public class casaDomotica {
 
     public boolean panicMode() {
         doorLocked = true;
-        
+
         System.out.println("\n--- PANIC MODE ACTIVATED ---");
-        System.err.println("All doors locked and closed!");
+        System.out.println("All doors locked and closed!");
 
         return false; // Totes les portes tancades
     }
