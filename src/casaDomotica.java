@@ -578,10 +578,30 @@ public class casaDomotica {
         for (int h = hours; h >= 0; h--) {
 
             // For 2: Controla els minuts
-            for (int m = (h == hours ? minutes : 59); m >= 0; m--) {
+            for (int m = 59; m >= 0; m--) {
+
+                // Verificar si és la primera hora
+                if (h == hours) {
+                    if (m > minutes) {
+                        continue;
+                    }
+                } else {
+
+                }
 
                 // For 3: Controla els segons
-                for (int s = (h == hours && m == minutes ? seconds : 59); s >= 0; s--) {
+                for (int s = 59; s >= 0; s--) {
+
+                    // Verificar si és el primer minut de la primera hora
+                    if (h == hours && m == minutes) {
+
+                        // Si és el primer minut, començar des dels segons introduïts
+                        if (s > seconds) {
+                            continue;
+                        }
+                    } else {
+
+                    }
 
                     // Mostrar el temps restant en format hores:minuts:segons
                     System.out.println("Time left: " + h + "h " + m + "m " + s + "s");
@@ -598,11 +618,6 @@ public class casaDomotica {
                     if (h == 0 && m == 0 && s == 0) {
                         break;
                     }
-                }
-
-                // Sortir si s'arriba a 0 minuts
-                if (h == 0 && m == 0) {
-                    break;
                 }
             }
 
