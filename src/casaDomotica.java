@@ -136,11 +136,17 @@ public class casaDomotica {
             case 1:
                 try {
                     System.out.print("Enter temperature: ");
-                    temperature = sc.nextDouble(); // Llegeix la nova temperatura
-                    System.out.println("Temperature set to: " + temperature + "°C");
+                    double newTemp = sc.nextDouble();
+
+                    if (newTemp >= 10 && newTemp <= 40) { // Límits
+                        temperature = newTemp;
+                        System.out.println("Temperature set to: " + temperature + "°C");
+                    } else {
+                        System.out.println("Error: Temperature must be between 10°C and 40°C");
+                    }
                 } catch (InputMismatchException e) {
                     System.out.println("Error: Please enter a valid number.");
-                    sc.nextLine(); // Neteja el buffer
+                    sc.nextLine();
                 }
                 break;
 
@@ -173,11 +179,17 @@ public class casaDomotica {
             case 1:
                 try {
                     System.out.print("Enter temperature: ");
-                    temperature = sc.nextDouble();
-                    System.out.println("Temperature set to: " + temperature + "°C");
+                    double newTemp = sc.nextDouble();
+
+                    if (newTemp >= 10 && newTemp <= 40) { // Límits
+                        temperature = newTemp;
+                        System.out.println("Temperature set to: " + temperature + "°C");
+                    } else {
+                        System.out.println("Error: Temperature must be between 10°C and 40°C");
+                    }
                 } catch (InputMismatchException e) {
                     System.out.println("Error: Please enter a valid number.");
-                    sc.nextLine(); // Neteja el buffer
+                    sc.nextLine();
                 }
                 break;
 
@@ -267,9 +279,17 @@ public class casaDomotica {
         int choice = userChoice();
 
         switch (choice) {
+
+            // Si estan enceses → les apaga
+            // Si estan apagades → les encén
             case 1:
-                lightsOn = true;
-                System.out.println("Lights turned ON: Specific room");
+                if (lightsOn) {
+                    lightsOn = false;
+                    System.out.println("Lights turned OFF: Specific room");
+                } else {
+                    lightsOn = true;
+                    System.out.println("Lights turned ON: Specific room");
+                }
                 break;
 
             case 2:
@@ -322,9 +342,17 @@ public class casaDomotica {
         int choice = userChoice();
 
         switch (choice) {
+
+            // Si estan enceses → les apaga
+            // Si estan apagades → les encén
             case 1:
-                lightsOn = true;
-                System.out.println("Lights turned ON: All rooms");
+                if (lightsOn) {
+                    lightsOn = false;
+                    System.out.println("Lights turned OFF: All rooms");
+                } else {
+                    lightsOn = true;
+                    System.out.println("Lights turned ON: All rooms");
+                }
                 break;
 
             case 2:
@@ -397,7 +425,8 @@ public class casaDomotica {
             System.out.println("1. Start a program");
             System.out.println("2. Check status");
             System.out.println("3. Cancel program");
-            System.out.println("4. Back to main menu");
+            System.out.println("4. Set laundry timer");
+            System.out.println("5. Back to main menu");
             System.out.print("Choose an option: ");
 
             int choice = userChoice();
@@ -428,6 +457,14 @@ public class casaDomotica {
                     break;
 
                 case 4:
+                    try {
+                        setLaundryTimer();
+                    } catch (Exception e) {
+                        System.out.println("Error setting laundry timer.");
+                    }
+                    break;
+
+                case 5:
                     exitLaundry = true;
                     break;
 
@@ -489,6 +526,38 @@ public class casaDomotica {
         laundryMode = "none";
         System.out.println("Laundry program cancelled");
         return false;
+    }
+
+    // Mètode amb triple for per al rellotge de la rentadora
+    public void setLaundryTimer() {
+        System.out.println("\n--- Set Laundry Timer ---");
+        System.out.println("Starting timer for 1 minute...");
+
+        // For 1: Controla les hores (comença a 0 hores)
+        for (int hours = 0; hours >= 0; hours--) {
+
+            // For 2: Controla els minuts (comença a 1 minut)
+            for (int minutes = 1; minutes >= 0; minutes--) {
+
+                // For 3: Controla els segons (comença a 5 segons)
+                for (int seconds = 5; seconds >= 0; seconds--) {
+                    System.out.println("Time left: " + hours + "h " + minutes + "m " + seconds + "s");
+
+                    // Esperar 1 segon
+                    // El programa fa una pause d'1 segon entre cada compte
+                    try {
+                        Thread.sleep(1000); // 1 segon
+
+                        // En cas de parar el timer
+                    } catch (InterruptedException e) {
+                        System.out.println("Timer stopped");
+                        return;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Laundry finished!");
     }
 
     // Control de les portes
