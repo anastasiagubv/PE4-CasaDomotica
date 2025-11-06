@@ -531,33 +531,90 @@ public class casaDomotica {
     // Mètode amb triple for per al rellotge de la rentadora
     public void setLaundryTimer() {
         System.out.println("\n--- Set Laundry Timer ---");
-        System.out.println("Starting timer for 1 minute...");
 
-        // For 1: Controla les hores (comença a 0 hores)
-        for (int hours = 0; hours >= 0; hours--) {
+        // Demanar a l'usuari les hores, minuts i segons
+        int hours = 0;
+        int minutes = 0;
+        int seconds = 0;
 
-            // For 2: Controla els minuts (comença a 1 minut)
-            for (int minutes = 1; minutes >= 0; minutes--) {
+        try {
+            // Demanar hores
+            System.out.print("Enter hours (0-23): ");
+            hours = sc.nextInt();
+            if (hours < 0 || hours > 23) {
+                System.out.println("Invalid hours! Using default: 0 hours");
+                hours = 0;
+            }
 
-                // For 3: Controla els segons (comença a 5 segons)
-                for (int seconds = 5; seconds >= 0; seconds--) {
-                    System.out.println("Time left: " + hours + "h " + minutes + "m " + seconds + "s");
+            // Demanar minuts
+            System.out.print("Enter minutes (0-59): ");
+            minutes = sc.nextInt();
+            if (minutes < 0 || minutes > 59) {
+                System.out.println("Invalid minutes! Using default: 0 minutes");
+                minutes = 0;
+            }
 
-                    // Esperar 1 segon
-                    // El programa fa una pause d'1 segon entre cada compte
+            // Demanar segons
+            System.out.print("Enter seconds (0-59): ");
+            seconds = sc.nextInt();
+            if (seconds < 0 || seconds > 59) {
+                System.out.println("Invalid seconds! Using default: 0 seconds");
+                seconds = 0;
+            }
+
+            System.out.println("Timer set for: " + hours + "h " + minutes + "m " + seconds + "s");
+            System.out.println("Starting countdown...");
+
+        } catch (InputMismatchException e) {
+            System.out.println("Error: Please enter valid numbers. Using default timer: 1 minute");
+            hours = 0;
+            minutes = 1;
+            seconds = 0;
+            sc.nextLine(); // Netejar el buffer
+        }
+
+        // TIMER
+        // For 1: Controla les hores
+        for (int h = hours; h >= 0; h--) {
+
+            // For 2: Controla els minuts
+            for (int m = (h == hours ? minutes : 59); m >= 0; m--) {
+
+                // For 3: Controla els segons
+                for (int s = (h == hours && m == minutes ? seconds : 59); s >= 0; s--) {
+
+                    // Mostrar el temps restant en format hores:minuts:segons
+                    System.out.println("Time left: " + h + "h " + m + "m " + s + "s");
+
+                    // Esperar 10 milisegons per a que no tardi
                     try {
-                        Thread.sleep(1000); // 1 segon
-
-                        // En cas de parar el timer
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
-                        System.out.println("Timer stopped");
-                        return;
+                        System.out.println("Timer stopped by user");
+                        return; // Sortir del mètode si s'interromp
+                    }
+
+                    // Sortir si s'arriba a 0 segons
+                    if (h == 0 && m == 0 && s == 0) {
+                        break;
                     }
                 }
+
+                // Sortir si s'arriba a 0 minuts
+                if (h == 0 && m == 0) {
+                    break;
+                }
+            }
+
+            // Surt del bucle del timer
+            if (h == 0) {
+                break;
             }
         }
 
-        System.out.println("Laundry finished!");
+        System.out.println("\n--- LAUNDRY FINISHED! ---");
+        System.out.println("The washing cycle has completed.");
+
     }
 
     // Control de les portes
